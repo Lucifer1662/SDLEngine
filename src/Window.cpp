@@ -48,7 +48,7 @@ int Window::Init(const char * windowName, const char* filePath, int x, int y, in
 
 	glewExperimental = GL_TRUE;
 	glewInit();
-
+	aspectRatio = (float)width / (float)height;
 	return 0;
 }
 

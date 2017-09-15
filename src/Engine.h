@@ -10,6 +10,7 @@ using std::vector;
 using glm::vec3;
 class Entity;
 class Window;
+class Camera;
 
 class API Engine
 {
@@ -23,7 +24,7 @@ public:
 	GLuint generalVAO;
 	MeshLoaded* squareMeshLoaded;
 	vector<MeshLoaded*> meshLoads;
-
+	Camera* mainCamera;
 
 	Engine(const char* localFilePath, Window* window, size_t initialEntities = 0);
 	~Engine();	
@@ -36,7 +37,7 @@ public:
 
 	MeshLoaded* LoadMesh(Mesh mesh, GLuint vbo = -1, GLuint ibo = -1);
 	void Engine::ResizeBuffers(GLuint oldSize, GLuint newSize, GLuint* bo, GLenum buffer);
-	Entity* AddEntity(vec3 position = vec3(0,0,0), vec3 rotation = vec3(0,0,0), vec3 scale = vec3(0,0,0));
+	Entity* AddEntity(vec3 position = vec3(0,0,0), vec3 rotation = vec3(0,0,0), vec3 scale = vec3(1,1,1));
 	
 };
 

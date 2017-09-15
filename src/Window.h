@@ -16,6 +16,7 @@ public:
 	int StartRendering();
 	Engine* engine;
 	SDL_Renderer* renderer;
+	GLfloat aspectRatio;
 
 
 };

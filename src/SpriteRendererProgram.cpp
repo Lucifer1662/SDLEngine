@@ -1,7 +1,8 @@
 #include "SpriteRendererProgram.h"
 #include "Transform.h"
 #include "Engine.h"
-
+#include "Entity.h"
+#include "Camera.h"
 
 SpriteRendererProgram::SpriteRendererProgram()
 {
@@ -27,11 +28,11 @@ GLuint SpriteRendererProgram::CreateProgram() {
 	Use();
 	//GLuint p = glGetAttribLocation(program, "vPosition");
 	glBindAttribLocation(program, 0, "vPosition");
-//	glBindAttribLocation(program, 1, "vUv");
+	glBindAttribLocation(program, 1, "vUv");
 
-//	viewMatrixLocation = glGetUniformLocation(program, "viewMat");
+	viewMatrixLocation = glGetUniformLocation(program, "viewMat");
 
-//	modelMatrixLocation = glGetUniformLocation(program, "modelMat");
+	modelMatrixLocation = glGetUniformLocation(program, "modelMat");
 //	uvAttributeLocation = glGetUniformLocation(program, "vUv");
 	glUniform1i(glGetUniformLocation(program, "colorTexture"), 0);
 	
@@ -44,7 +45,6 @@ void SpriteRendererProgram::PreRenderSetup() {
 }
 
 void SpriteRendererProgram::SetTransform(Transform* transform) {
-	
-	glUniformMatrix4fv(modelMatrixLocation, 1, GL_FALSE, &(transform->translationMatrix * transform->rotationMatrix * transform->scaleMatrix)[0][0]); //update
+	glUniformMatrix4fv(modelMatrixLocation, 1, GL_FALSE, &(transform->entity->engine->mainCamera->GetTransformationMatrix() * transform->translationMatrix * transform->rotationMatrix * transform->scaleMatrix)[0][0]); //update
 }
 

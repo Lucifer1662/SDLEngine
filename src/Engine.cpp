@@ -76,9 +76,9 @@ int Engine::Render()
 Entity * Engine::AddEntity(vec3 position, vec3 rotation, vec3 scale)
 {
 	Entity* entity = new Entity(this);
-	entity->transform.position = position;
-	entity->transform.rotation = rotation;
-	entity->transform.scale = scale;
+	entity->transform.SetPosition(position);
+	entity->transform.SetRotation(rotation);
+	entity->transform.SetScale(scale);
 	entities.push_back(entity);
 	return entity;
 }

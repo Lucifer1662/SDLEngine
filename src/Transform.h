@@ -19,5 +19,16 @@ public:
 		this->position = position;
 		translationMatrix = glm::translate(position);
 	}
+	void SetRotation(vec3 rotation) {
+		this->rotation = rotation;
+		rotationMatrix = glm::rotate(rotation.x, vec3(1, 0, 0))
+			* glm::rotate(rotation.y, vec3(0, 1, 0))
+			* glm::rotate(rotation.z, vec3(0, 0, 1));
+	}
+	void SetScale(vec3 scale) {
+		this->scale = scale;
+		scaleMatrix = glm::scale(scale);
+	}
+	
 };
 
