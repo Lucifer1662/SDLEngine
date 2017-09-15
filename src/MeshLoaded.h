@@ -7,8 +7,8 @@ using std::string;
 using std::vector;
 
 struct MeshLoaded {
-	GLuint vertexOffset;
-	GLuint indexOffset;
+	GLuint vertexOffsetBytes;
+	GLuint indexOffsetBytes;
 	GLuint indexCount;
 	GLuint vertexCount;
 	GLuint stride;

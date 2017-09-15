@@ -19,6 +19,7 @@
     <ClInclude Include="src\Sprite.h" />
     <ClInclude Include="src\Texture2D.h" />
     <ClInclude Include="src\Camera.h" />
+    <ClInclude Include="src\TileRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Engine.cpp" />
@@ -33,5 +34,6 @@
     <ClCompile Include="src\Sprite.cpp" />
     <ClCompile Include="src\Texture2D.cpp" />
     <ClCompile Include="src\Camera.cpp" />
+    <ClCompile Include="src\TileRenderer.cpp" />
   </ItemGroup>
 </Project>

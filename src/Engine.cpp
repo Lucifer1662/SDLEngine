@@ -28,7 +28,7 @@ int Engine::Init()
 	glGenBuffers(1, &indexBuffer);
 #pragma endregion
 	//Create Default Shapes
-#pragma region Create Square
+	
 	vec3 positions[4];
 	positions[0] = vec3(-0.5f, -0.5f, 0);
 	positions[1] = vec3(-0.5f, 0.5f, 0);
@@ -55,6 +55,10 @@ int Engine::Init()
 
 	squareMeshLoaded = LoadMesh(squareMesh);
 
+	return 0;
+}
+
+int Engine::Start() {
 	//Start all entities
 	for (size_t i = 0; i < entities.size(); i++)
 		entities[i]->Start();
@@ -91,19 +95,116 @@ void Engine::RenderLoadedMesh(MeshLoaded meshLoaded)
 
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+
 	for (i = 0; i < meshLoaded.atribCounts.size(); i++)
 		glVertexAttribPointer(meshLoaded.atribCounts[i].x, meshLoaded.atribCounts[i].y, GL_FLOAT, GL_FALSE,
-			20, (void*)(meshLoaded.atribCounts[i].z));
+			meshLoaded.stride, (void*)(meshLoaded.atribCounts[i].z));
 
-	glDrawElements(GL_TRIANGLES, meshLoaded.indexCount, GL_UNSIGNED_INT, (void*)(meshLoaded.indexOffset));
+	glDrawElements(GL_TRIANGLES, meshLoaded.indexCount, GL_UNSIGNED_INT, (void*)(meshLoaded.indexOffsetBytes));
 
 	for (i = 0; i < meshLoaded.atribCounts.size(); i++)
 		glDisableVertexAttribArray(meshLoaded.atribCounts[i].x);
 }
 
-MeshLoaded* Engine::LoadMesh(Mesh mesh, GLuint vbo, GLuint ibo) {
-
+MeshLoaded* Engine::LoadMeshCustom(Mesh mesh, GLuint &vbo, GLuint &ibo) {
 	MeshLoaded* loadedMesh = new MeshLoaded();
+
+	size_t countOfTotalAtribCounts = 0;
+	size_t offset = 0;
+	if (mesh.vertices.size() > 0) {
+		//atribCounts.push_back(vec3ui(0, 3, offset));
+		loadedMesh->atribCounts.push_back(vec3ui(loadedMesh->atribCounts.size(), sizeof(mesh.vertices[0]) / sizeof(mesh.vertices[0].x), offset));
+		offset += sizeof(mesh.vertices[0]);
+		countOfTotalAtribCounts += loadedMesh->atribCounts[loadedMesh->atribCounts.size() - 1].y;
+	}
+	if (mesh.uvs.size() > 0) {
+		//atribCounts.push_back(vec3ui(1, 3, offset));
+		loadedMesh->atribCounts.push_back(vec3ui(vec3ui(loadedMesh->atribCounts.size(), sizeof(mesh.uvs[0]) / sizeof(mesh.uvs[0].x), offset)));
+		offset += sizeof(mesh.uvs[0]);
+		countOfTotalAtribCounts += loadedMesh->atribCounts[loadedMesh->atribCounts.size() - 1].y;
+	}
+
+	for (size_t i = 0; i < mesh.additionalVertexDataStrides.size(); i++)
+	{
+		loadedMesh->atribCounts.push_back(vec3ui(vec3ui(loadedMesh->atribCounts.size(), mesh.additionalVertexDataStrides[i], offset)));
+		offset += mesh.additionalVertexDataStrides[i];
+		countOfTotalAtribCounts += loadedMesh->atribCounts[loadedMesh->atribCounts.size() - 1].y;
+	}
+	size_t totalAdditionalStride = 0;
+	for (size_t i = 0; i < mesh.additionalVertexDataStrides.size(); i++)
+		totalAdditionalStride += mesh.additionalVertexDataStrides[i];
+
+
+	vector<GLfloat>vertices;
+	vertices.resize(countOfTotalAtribCounts * mesh.vertices.size());
+	size_t k = 0;
+	size_t i = 0;
+	size_t j;
+	while (k < mesh.vertices.size())
+	{
+		vertices[i++] = mesh.vertices[k][0];
+		vertices[i++] = mesh.vertices[k][1];
+		vertices[i++] = mesh.vertices[k][2];
+
+		if (mesh.uvs.size() > 0) {
+			vertices[i++] = mesh.uvs[k][0];
+			vertices[i++] = mesh.uvs[k][1];
+		}
+		for (j = 0; j < totalAdditionalStride; j++)
+		{
+			vertices[i++] = mesh.additionalVertexData[j + k * totalAdditionalStride];
+		}
+		k++;
+	}
+
+	loadedMesh->indexCount = mesh.indices.size();
+	loadedMesh->vertexCount = mesh.vertices.size();
+	//loadedMesh->indexOffset = sizeOfIndexes * sizeof(GLuint);
+	//meshLs->vertexOffset = sizeOfVertexes * sizeof(GLfloat);
+	loadedMesh->name = mesh.name;
+
+
+
+
+
+
+	//---------------------Load Mesh Into Graphics------------------
+
+
+	for (GLuint i = 0; i < loadedMeshes.size(); i++)
+	{
+		loadedMesh->vertexOffsetBytes += loadedMeshes[i]->vertexCount;
+		loadedMesh->indexOffsetBytes += loadedMeshes[i]->indexCount;
+	}
+	GLuint sizeOfVertexes = loadedMesh->vertexOffsetBytes + loadedMesh->vertexCount;
+	GLuint sizeOfIndexes = loadedMesh->indexOffsetBytes + loadedMesh->indexCount;;
+
+	glGenBuffers(1, &vbo);
+	glGenBuffers(1, &ibo);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+
+
+	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(GLfloat), &(vertices[0]), GL_DYNAMIC_DRAW);
+
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh.indices.size() * sizeof(GLuint), &(mesh.indices[0]), GL_DYNAMIC_DRAW);
+
+
+	offset = 0;
+	if (loadedMesh->atribCounts.size() > 1)
+		for (GLuint i = 0; i < loadedMesh->atribCounts.size(); i++) {
+			loadedMesh->stride += sizeof(GL_FLOAT) * loadedMesh->atribCounts[i].y;
+			offset += loadedMesh->atribCounts[i].y;
+		}
+	else
+		loadedMesh->stride = 0;
+
+	return loadedMesh;
+}
+
+MeshLoaded* Engine::LoadMesh(Mesh mesh) {
+	MeshLoaded* loadedMesh = new MeshLoaded();
+	
 	size_t countOfTotalAtribCounts = 0;
 	size_t offset = 0;
 	if (mesh.vertices.size() > 0) {
@@ -153,7 +254,7 @@ MeshLoaded* Engine::LoadMesh(Mesh mesh, GLuint vbo, GLuint ibo) {
 	}
 	
 	loadedMesh->indexCount = mesh.indices.size();
-	loadedMesh->vertexCount = mesh.vertices.size();
+	loadedMesh->vertexCount = vertices.size();
 	//loadedMesh->indexOffset = sizeOfIndexes * sizeof(GLuint);
 	//meshLs->vertexOffset = sizeOfVertexes * sizeof(GLfloat);
 	loadedMesh->name = mesh.name;
@@ -164,54 +265,50 @@ MeshLoaded* Engine::LoadMesh(Mesh mesh, GLuint vbo, GLuint ibo) {
 
 
 	//---------------------Load Mesh Into Graphics------------------
-	GLuint sizeOfVertexes = 0;
-	GLuint sizeOfIndexes = 0;
-	for (GLuint i = 0; i < meshLoads.size(); i++)
+	
+	
+	for (GLuint i = 0; i < loadedMeshes.size(); i++)
 	{
-		sizeOfVertexes += meshLoads[i]->vertexCount;
-		sizeOfIndexes += meshLoads[i]->indexCount;
+		loadedMesh->vertexOffsetBytes += loadedMeshes[i]->vertexCount;
+		loadedMesh->indexOffsetBytes += loadedMeshes[i]->indexCount;
 	}
-	if (vbo == -1)
-		vbo = vertexBuffer;
-	if (ibo == -1)
-		ibo = indexBuffer;
+	loadedMesh->vertexOffsetBytes *= sizeof(GLfloat);
+	loadedMesh->indexOffsetBytes *= sizeof(GLuint);
 
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-
-	if (sizeOfVertexes > 0) {
-		ResizeBuffers(sizeOfVertexes * sizeof(GLfloat), (sizeOfVertexes + vertices.size()) * sizeof(GLfloat), &vbo, GL_ARRAY_BUFFER);
-		glBufferSubData(GL_ARRAY_BUFFER, sizeOfVertexes * sizeof(GLfloat), vertices.size() * sizeof(GLfloat), &(vertices[0]));
+	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+	
+	// loadedMesh->vertexOffset * sizeof(GLfloat)
+	if (loadedMeshes.size() >= 1) {
+		ResizeBuffers(loadedMesh->vertexOffsetBytes, loadedMesh->vertexOffsetBytes + vertices.size() * sizeof(GLfloat), &vertexBuffer, GL_ARRAY_BUFFER);
+		glBufferSubData(GL_ARRAY_BUFFER, loadedMesh->vertexOffsetBytes, vertices.size() * sizeof(GLfloat), &(vertices[0]));
 	}
 	else
 		glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(GLfloat), &(vertices[0]), GL_DYNAMIC_DRAW);
 
 
-	if (sizeOfIndexes > 0) {
-		ResizeBuffers(sizeOfIndexes * sizeof(GLuint), (sizeOfIndexes + mesh.indices.size()) * sizeof(GLuint), &ibo, GL_ELEMENT_ARRAY_BUFFER);
-		glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, sizeOfIndexes * sizeof(GLuint), mesh.indices.size() * sizeof(GLuint), &(mesh.indices[0]));
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+	if (loadedMeshes.size() >= 1) {
+		ResizeBuffers(loadedMesh->indexOffsetBytes, loadedMesh->indexOffsetBytes + mesh.indices.size() * sizeof(GLuint), &indexBuffer, GL_ELEMENT_ARRAY_BUFFER);
+		glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, loadedMesh->indexOffsetBytes, mesh.indices.size() * sizeof(GLuint), &(mesh.indices[0]));
 	}
 	else
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh.indices.size() * sizeof(GLuint), &(mesh.indices[0]), GL_DYNAMIC_DRAW);
 
 
-	GLuint vertModelOffset = 0;// mesh.vertices.size() * sizeof(GLfloat);
+	GLuint vertModelOffset = loadedMesh->vertexOffsetBytes;//.vertices.size() * sizeof(GLfloat);
 
 
 	offset = 0;
 	if (loadedMesh->atribCounts.size() > 1)
 		for (GLuint i = 0; i < loadedMesh->atribCounts.size(); i++) {
-			loadedMesh->stride += sizeof(mesh.vertices[offset]) * loadedMesh->atribCounts[i].y;
+			loadedMesh->stride += sizeof(GL_FLOAT) * loadedMesh->atribCounts[i].y;
 			offset += loadedMesh->atribCounts[i].y;
 			loadedMesh->atribCounts[i].z += vertModelOffset;
 		}
 	else
 		loadedMesh->stride = 0;
 
-	if (vbo == -1)
-		meshLoads.push_back(loadedMesh);
-	
-	
+	loadedMeshes.push_back(loadedMesh);
 	return loadedMesh;
 }
 
@@ -234,5 +331,6 @@ void Engine::ResizeBuffers(GLuint oldSize, GLuint newSize, GLuint* bo, GLenum bu
 
 	glDeleteBuffers(1, bo);
 	bo[0] = vbotemp;
+	glBindBuffer(buffer, vbotemp);
 
 }

@@ -49,11 +49,12 @@ int Window::Init(const char * windowName, const char* filePath, int x, int y, in
 	glewExperimental = GL_TRUE;
 	glewInit();
 	aspectRatio = (float)width / (float)height;
+	engine->Init();
 	return 0;
 }
 
 int Window::StartRendering(){	
-	engine->Init();
+	engine->Start();
 	while (1) {
 		glClearColor(0.5, 0.0, 1.0, 1.0);
 		glClear(GL_COLOR_BUFFER_BIT);

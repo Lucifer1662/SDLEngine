@@ -16,26 +16,27 @@ class API Engine
 {
 	
 	vector<Entity*> entities;
-
+	vector<MeshLoaded*> loadedMeshes;
 public:
 	static const char* localFilePath;
 	GLuint vertexBuffer;
 	GLuint indexBuffer;
 	GLuint generalVAO;
 	MeshLoaded* squareMeshLoaded;
-	vector<MeshLoaded*> meshLoads;
 	Camera* mainCamera;
 
 	Engine(const char* localFilePath, Window* window, size_t initialEntities = 0);
 	~Engine();	
 
 	int Init();
+	int Start();
 	int Render();
 	Window* window;
 
 	void RenderLoadedMesh(MeshLoaded meshLoaded);
 
-	MeshLoaded* LoadMesh(Mesh mesh, GLuint vbo = -1, GLuint ibo = -1);
+	MeshLoaded* LoadMeshCustom(Mesh mesh, GLuint &vbo, GLuint &ibo);
+	MeshLoaded* LoadMesh(Mesh mesh);
 	void Engine::ResizeBuffers(GLuint oldSize, GLuint newSize, GLuint* bo, GLenum buffer);
 	Entity* AddEntity(vec3 position = vec3(0,0,0), vec3 rotation = vec3(0,0,0), vec3 scale = vec3(1,1,1));
 	
