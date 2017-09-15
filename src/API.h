@@ -4,3 +4,4 @@
 #define API __declspec(dllexport)
 
 #endif // !API
+
