@@ -30,6 +30,6 @@ mat4 Camera::GetTransformationMatrix() {
 }
 
 void Camera::Update() {
-	entity->transform.position;
-	totalMatrix = glm::lookAt(entity->transform.position, vec3(vec4(0,0,1,1) * entity->transform.rotationMatrix),vec3(0,1,0)) * transformatiomMatrix;
+	entity->transform->position;
+	totalMatrix = glm::lookAt(entity->transform->position, vec3(vec4(0,0,1,1) * entity->transform->rotationMatrix),vec3(0,1,0)) * transformatiomMatrix;
 }

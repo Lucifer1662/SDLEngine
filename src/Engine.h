@@ -14,7 +14,7 @@ class Camera;
 
 class API Engine
 {
-	
+	friend class Entity;
 	vector<Entity*> entities;
 	vector<MeshLoaded*> loadedMeshes;
 public:

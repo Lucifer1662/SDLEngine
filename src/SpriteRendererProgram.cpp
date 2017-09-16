@@ -45,6 +45,6 @@ void SpriteRendererProgram::PreRenderSetup() {
 }
 
 void SpriteRendererProgram::SetTransform(Transform* transform) {
-	glUniformMatrix4fv(modelMatrixLocation, 1, GL_FALSE, &(transform->entity->engine->mainCamera->GetTransformationMatrix() * transform->translationMatrix * transform->rotationMatrix * transform->scaleMatrix)[0][0]); //update
+	glUniformMatrix4fv(modelMatrixLocation, 1, GL_FALSE, &(transform->entity->engine->mainCamera->GetTransformationMatrix() * transform->overallTransform)[0][0]); //update
 }
 

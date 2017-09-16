@@ -5,6 +5,7 @@
 #include "Transform.h"
 using std::vector;
 
+class Transform;
 class Engine;
 class API Entity
 {
@@ -14,12 +15,15 @@ class API Entity
 	void Render();
 	void Start();
 	
+	vector<Entity*> children;
+	Entity* parent;
+
 public:
 	Entity(Engine* engine);
 	Entity(size_t numOfComponents);
 	~Entity();
 	Engine* engine;
-	Transform transform;
+	Transform* transform;
 
 	template<typename T>
 	T* AddComponent() {
@@ -28,5 +32,15 @@ public:
 		components.push_back((Component*)t);
 		return t;
 	}
+
+	Entity* AddChild(Entity* child);
+	Entity* SetParent(Entity* parent);
+	Entity* GetParent();
+	void RemoveChild(Entity* child);
+	Entity* GetChildAt(size_t index);
+	size_t ChildCount();
+	vector<Entity*> getCopyOfChildren();
+
+	
 };
 

@@ -34,6 +34,7 @@
     <ClInclude Include="src\Sprite.h" />
     <ClInclude Include="src\SpriteRendererProgram.h" />
     <ClInclude Include="src\Texture2D.h" />
+    <ClInclude Include="src\Texture2DShared.h" />
     <ClInclude Include="src\TileRenderer.h" />
     <ClInclude Include="src\Transform.h" />
     <ClInclude Include="src\vec3ui.h" />
@@ -50,6 +51,7 @@
     <ClCompile Include="src\Sprite.cpp" />
     <ClCompile Include="src\SpriteRendererProgram.cpp" />
     <ClCompile Include="src\Texture2D.cpp" />
+    <ClCompile Include="src\Texture2DShared.cpp" />
     <ClCompile Include="src\TileRenderer.cpp" />
     <ClCompile Include="src\Transform.cpp" />
     <ClCompile Include="src\Window.cpp" />

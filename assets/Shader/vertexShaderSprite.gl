@@ -10,6 +10,6 @@ out vec2 uv;
 void main() {
 //viewMat * modelMat *
 	gl_PointSize = 10.0;
-    gl_Position = vPosition;
+    gl_Position = modelMat * vPosition;
 	uv=vUv;
 }

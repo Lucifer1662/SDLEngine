@@ -10,7 +10,7 @@ void TileRenderer::Start(){
 }
 void TileRenderer::Render(){
 	program->PreRenderSetup();
-	program->SetTransform(&entity->transform);
+	program->SetTransform(entity->transform);
 	texture.Bind(0);
 	entity->engine->RenderLoadedMesh(*loadedMesh);
 	//entity->engine->squareMeshLoaded->indexOffset = 6;

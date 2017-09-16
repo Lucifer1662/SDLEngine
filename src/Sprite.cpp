@@ -20,7 +20,7 @@ void Sprite::Start()
 void Sprite::Render()
 {
 	program->PreRenderSetup();
-	program->SetTransform(&entity->transform);
+	program->SetTransform(entity->transform);
 	texture.Bind(0);
 	entity->engine->RenderLoadedMesh(*entity->engine->squareMeshLoaded);
 }

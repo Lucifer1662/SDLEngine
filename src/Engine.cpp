@@ -3,6 +3,7 @@
 #include <GL\glew.h>
 #include "Mesh.h"
 #include "vec3ui.h"
+#include "Transform.h"
 
 
 const char* Engine::localFilePath;
@@ -80,9 +81,9 @@ int Engine::Render()
 Entity * Engine::AddEntity(vec3 position, vec3 rotation, vec3 scale)
 {
 	Entity* entity = new Entity(this);
-	entity->transform.SetPosition(position);
-	entity->transform.SetRotation(rotation);
-	entity->transform.SetScale(scale);
+	entity->transform->SetPosition(position);
+	entity->transform->SetRotation(rotation);
+	entity->transform->SetScale(scale);
 	entities.push_back(entity);
 	return entity;
 }
@@ -106,6 +107,7 @@ void Engine::RenderLoadedMesh(MeshLoaded meshLoaded)
 		glDisableVertexAttribArray(meshLoaded.atribCounts[i].x);
 }
 
+//Idk If this works yet
 MeshLoaded* Engine::LoadMeshCustom(Mesh mesh, GLuint &vbo, GLuint &ibo) {
 	MeshLoaded* loadedMesh = new MeshLoaded();
 
