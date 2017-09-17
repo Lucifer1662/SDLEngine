@@ -31,7 +31,9 @@ int Window::Init(const char * windowName, const char* filePath, int x, int y, in
 	aspectRatio = (float)width / (float)height;
 	SDL_SetWindowResizable(window, SDL_TRUE);
 	
-
+	input = Input();
+	
+	input.keyDown = (bool*)SDL_GetKeyboardState(NULL);
 	// Create our opengl context and attach it to our window
 	SDL_GL_CreateContext(window);
 
@@ -63,12 +65,20 @@ int Window::StartRendering(){
 
 	while (1) {
 		SDL_PollEvent(&windowEvent);
-		if (windowEvent.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
-			SDL_GetWindowSize(window, &width, &height);
-			aspectRatio = (float)width / (float)height;
-			windowChangedSize.Call(width, height);
-			glViewport(0, 0, width, height);
+
+		switch (windowEvent.window.event)
+		{
+			case (SDL_WINDOWEVENT_SIZE_CHANGED): {
+				SDL_GetWindowSize(window, &width, &height);
+				aspectRatio = (float)width / (float)height;
+				windowChangedSize.Call(width, height);
+				glViewport(0, 0, width, height);
+
+				break;
+			}
+			
 		}
+
 		glClear(GL_COLOR_BUFFER_BIT);
 		engine->Render();
 		SDL_GL_SwapWindow(window);

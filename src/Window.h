@@ -4,6 +4,7 @@
 #include <SDL2\SDL.h>
 #include "Engine.h"
 #include "Event.h"
+#include "Input.h"
 class API Window
 {
 	SDL_Window* window;
@@ -18,5 +19,6 @@ public:
 	GLfloat aspectRatio;
 	int width, height;
 	Event<void,int,int> windowChangedSize;
+	Input input;
 };
 
