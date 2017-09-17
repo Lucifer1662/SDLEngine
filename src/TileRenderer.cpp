@@ -11,13 +11,13 @@ void TileRenderer::Start(){
 void TileRenderer::Render(){
 	program->PreRenderSetup();
 	program->SetTransform(entity->transform);
-	texture.Bind(0);
+	texture->Bind(0);
 	entity->engine->RenderLoadedMesh(*loadedMesh);
 	//entity->engine->squareMeshLoaded->indexOffset = 6;
 	//entity->engine->RenderLoadedMesh(*entity->engine->squareMeshLoaded);
 }
 
-void TileRenderer::Init(size_t width, size_t height, GLfloat delta, size_t * tiles, Texture2D texture, float sizeOfSprite)
+void TileRenderer::Init(size_t width, size_t height, GLfloat delta, size_t * tiles, Texture2D* texture, float sizeOfSprite)
 {
 
 

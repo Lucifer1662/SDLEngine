@@ -1,9 +1,10 @@
 #include "Window.h"
 #include <SDL2\SDL_image.h>
+#include <SDL2\SDL_ttf.h>
 
-
-Window::Window(const char* localFilePath) : renderer(SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED))
+Window::Window(const char* localFilePath) 
 {
+	
 	string temp = localFilePath;
 	temp.resize(temp.find_last_of('\\') + 1);
 	temp.append("assets\\");
@@ -23,10 +24,13 @@ int Window::Init(const char * windowName, const char* filePath, int x, int y, in
 {
 	SDL_SetMainReady();
 	SDL_Init(SDL_INIT_VIDEO);
+	TTF_Init();
 	window = SDL_CreateWindow("Fighting Game", x, y, width, height, SDL_WINDOW_OPENGL);
-
-	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-
+	this->width = width;
+	this->height = height;
+	aspectRatio = (float)width / (float)height;
+	SDL_SetWindowResizable(window, SDL_TRUE);
+	
 
 	// Create our opengl context and attach it to our window
 	SDL_GL_CreateContext(window);
@@ -48,21 +52,27 @@ int Window::Init(const char * windowName, const char* filePath, int x, int y, in
 
 	glewExperimental = GL_TRUE;
 	glewInit();
-	aspectRatio = (float)width / (float)height;
+	
 	engine->Init();
 	return 0;
 }
 
 int Window::StartRendering(){	
-	engine->Start();
+	SDL_Event windowEvent;
+	glClearColor(0.5, 0.0, 1.0, 1.0);
+
 	while (1) {
-		glClearColor(0.5, 0.0, 1.0, 1.0);
+		SDL_PollEvent(&windowEvent);
+		if (windowEvent.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
+			SDL_GetWindowSize(window, &width, &height);
+			aspectRatio = (float)width / (float)height;
+			windowChangedSize.Call(width, height);
+			glViewport(0, 0, width, height);
+		}
 		glClear(GL_COLOR_BUFFER_BIT);
-		
-		//SDL_RenderClear(renderer);
 		engine->Render();
-		//SDL_RenderPresent(renderer);	
 		SDL_GL_SwapWindow(window);
+		
 	}
 	return 0;
 }

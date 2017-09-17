@@ -7,12 +7,14 @@ using std::string;
 using std::vector;
 
 struct MeshLoaded {
-	GLuint vertexOffsetBytes;
+	GLuint vertexOffset;
 	GLuint indexOffsetBytes;
 	GLuint indexCount;
 	GLuint vertexCount;
-	GLuint stride;
-	vector<vec3ui> atribCounts;
-	string name;
+	GLuint* vao;
+	vector<GLuint*> buffers;
+	//GLuint stride;
+	//vector<vec3ui> atribCounts;
+	//string name;
 
 };

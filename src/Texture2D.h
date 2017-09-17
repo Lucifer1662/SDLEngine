@@ -9,7 +9,7 @@ class API Texture2D
 public:
 	Texture2D();
 	~Texture2D();
-	Texture2D(const char* filePath, SDL_Renderer* renderer);
+	Texture2D(const char* filePath);
 	void Bind(GLuint textureLocation);
 	int width, height;
 };

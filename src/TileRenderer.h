@@ -6,11 +6,11 @@
 
 class API TileRenderer : public Component {
 	static SpriteRendererProgram* program;
-	Texture2D texture;
+	Texture2D* texture;
 	MeshLoaded* loadedMesh;
 public: 
 	void Start();
 	void Render();
-	void Init(size_t width, size_t height, GLfloat delta, size_t* tiles, Texture2D texture, float sizeOfSprite);
+	void Init(size_t width, size_t height, GLfloat delta, size_t* tiles, Texture2D* texture, float sizeOfSprite);
 
 };
