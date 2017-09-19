@@ -19,10 +19,9 @@ class API Entity
 	Entity* parent;
 
 public:
-	Entity(Engine* engine);
+	Entity();
 	Entity(size_t numOfComponents);
 	~Entity();
-	Engine* engine;
 	Transform* transform;
 
 	template<typename T>
@@ -40,6 +39,7 @@ public:
 	Entity* GetChildAt(size_t index);
 	size_t ChildCount();
 	vector<Entity*> getCopyOfChildren();
+	void Destroy();
 
 	
 };

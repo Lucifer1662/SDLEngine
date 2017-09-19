@@ -8,5 +8,6 @@ public:
 	virtual void Update() {};
 	virtual void Render() {};
 	virtual void Start() {};
+	virtual ~Component() {};
 
 };

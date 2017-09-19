@@ -1,9 +1,10 @@
 #pragma once
+#include "API.h"
 #include <vector>
 
 using std::vector;
 template<typename ret, typename... types>
-class Event
+class API Event
 {
 	vector<void*> objs;
 	vector<ret(*)(void*, types...)> functions;

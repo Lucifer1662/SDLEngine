@@ -5,20 +5,26 @@
 #include "Engine.h"
 #include "Window.h"
 #include <string>
+#include <exception>
 using std::string;
+using std::make_shared;
+
+vector<Texture2D> textures;
 
 
-Texture2D::Texture2D()
+_Texture2D::_Texture2D()
 {
 }
 
 
-Texture2D::~Texture2D()
+_Texture2D::~_Texture2D()
 {
-
+		
 }
 
-Texture2D::Texture2D(const char * filePath)
+
+
+void _Texture2D::Load(const char * filePath)
 {
 
 	
@@ -36,9 +42,37 @@ Texture2D::Texture2D(const char * filePath)
 	height = img->h;
 }
 
-void Texture2D::Bind(GLuint textureLocation)
+void _Texture2D::Bind(GLuint textureLocation)
 {
 	glActiveTexture(GL_TEXTURE0 + textureLocation);
 	glBindTexture(GL_TEXTURE_2D,texture);
 	
+}
+
+
+Texture2D _Texture2D::Create(const char * filePath)
+{
+	//See if the texture has already been created and if so return it
+	for (size_t i = 0; i < textures.size(); i++)
+		if (textures[i]->fileName == filePath) {
+			return textures[i];
+		}
+
+	//else create a new texture2dshared
+	Texture2D text = make_shared<_Texture2D>();
+	text->Load(filePath);
+	//textures.push_back(text);
+	text->fileName = filePath;
+	return text;
+}
+
+void _Texture2D::Delete(Texture2D texture) {
+	if (texture.use_count() == 2) {
+		for (size_t i = 0; i < textures.size(); i++)
+			if (textures[i].get() == texture.get()) {
+				textures[i] = textures[textures.size() - 1];
+				textures.pop_back();
+				return;
+			}
+	}
 }

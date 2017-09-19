@@ -8,7 +8,7 @@ using glm::vec4;
 #define VERTEXCOUNT 4
 
 void TextRenderer::Start() {
-	entity->engine->window->windowChangedSize.Add(this, windowChangedTextRenderer);
+	Window::windowChangedSize.Add(this, windowChangedTextRenderer);
 
 	isStatic = false;
 	program = Program::GetProgram<SpriteRendererProgram>();
@@ -23,9 +23,9 @@ void TextRenderer::Start() {
 	//glGenBuffers(1, &ibo);
 	Mesh *mesh = CreateMeshDataForRender();
 	if(isStatic)
-		textMesh = entity->engine->LoadMesh(*mesh);
+		textMesh = Engine::LoadMesh(*mesh);
 	else
-		textMesh = entity->engine->LoadDynamicMesh(*mesh);
+		textMesh = Engine::LoadDynamicMesh(*mesh);
 	delete mesh;
 	hasStarted = true;
 }
@@ -40,7 +40,7 @@ void TextRenderer::Render() {
 	program->SetTransform(entity->transform);
 	font->texture->Bind(0);
 	//need to make this on its own vbo and ibo
-	entity->engine->RenderLoadedMesh(*textMesh);	
+	Engine::RenderLoadedMesh(*textMesh);
 }
 
 
@@ -217,7 +217,7 @@ void TextRenderer::RefreshText() {
 	if (!hasStarted)
 		return;
 	Mesh* mesh = CreateMeshDataForRender();
-	entity->engine->ChangeDynamicMesh(*mesh, textMesh);
+	Engine::ChangeDynamicMesh(*mesh, textMesh);
 	delete mesh;	
 }
 
@@ -229,4 +229,5 @@ void windowChangedTextRenderer(void* obj, int w, int h) {
 
 TextRenderer::~TextRenderer()
 {
+	delete font;
 }

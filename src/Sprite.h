@@ -12,6 +12,6 @@ public:
 	~Sprite();
 	void Start();
 	void Render();
-	Texture2D* texture;
+	Texture2D texture;
 };
 

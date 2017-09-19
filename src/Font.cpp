@@ -2,8 +2,8 @@
 #include "IO.h"
 #include "Split.h"
 #include "stdlib.h"
-#include "Texture2DShared.h"
 #include "Window.h"
+#include "Texture2D.h"
 
 Font::Font()
 {
@@ -18,7 +18,7 @@ void Font::LoadFont(const char* fontName) {
 	string imageDestination = "Fonts/";
 	imageDestination.append(fontName);
 	imageDestination.append(".png");
-	texture = Texture2DShared::Create((char *)imageDestination.c_str());
+	texture = _Texture2D::Create((char *)imageDestination.c_str());
 
 	string resourcePath = "Fonts/";
 	resourcePath.append(fontName);
@@ -81,4 +81,5 @@ size_t Font::GetSize()
 
 Font::~Font()
 {
+	_Texture2D::Delete(texture);
 }

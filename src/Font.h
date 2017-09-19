@@ -12,7 +12,7 @@ class Font
 	vector<FontCharacter> characters;
 
 public:
-	Texture2D* texture;
+	Texture2D texture;
 	FontCharacter GetFontCharacter(char c);
 	size_t GetLineHeight();
 	size_t GetSize();

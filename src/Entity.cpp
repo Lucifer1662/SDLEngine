@@ -29,7 +29,7 @@ void Entity::Start()
 	
 }
 
-Entity::Entity(Engine* engine): engine(engine)
+Entity::Entity()
 {
 	transform = new Transform();
 	transform->entity = this;
@@ -43,6 +43,14 @@ Entity::Entity(size_t numOfComponents)
 
 Entity::~Entity()
 {
+	for (size_t i = 0; i < components.size(); i++)
+		delete components[i];
+	
+	components.clear();
+	for (size_t i = 0; i < children.size(); i++)
+		delete children[i];
+	
+	children.clear();
 }
 
 Entity * Entity::AddChild(Entity * child)
@@ -58,15 +66,15 @@ Entity * Entity::AddChild(Entity * child)
 Entity * Entity::SetParent(Entity * parent)
 {
 	if (parent == nullptr)
-		engine->entities.push_back(parent);
+		Engine::entities.push_back(parent);
 	else {
 		this->parent = parent;
 		parent->AddChild(this);
-		for (size_t i = 0; i < engine->entities.size(); i++)
+		for (size_t i = 0; i < Engine::entities.size(); i++)
 		{
-			if (engine->entities[i] == this) {
-				engine->entities[i] = engine->entities[engine->entities.size() - 1];
-				engine->entities.pop_back();
+			if (Engine::entities[i] == this) {
+				Engine::entities[i] = Engine::entities[Engine::entities.size() - 1];
+				Engine::entities.pop_back();
 				return parent;
 			}
 		}
@@ -108,4 +116,9 @@ size_t Entity::ChildCount()
 vector<Entity*> Entity::getCopyOfChildren()
 {
 	return children;
+}
+
+void Entity::Destroy()
+{
+	Engine::DestroyEntity(this);
 }

@@ -4,25 +4,25 @@
 #include "Mesh.h"
 #include "vec3ui.h"
 #include "Transform.h"
+#include "API.h"
 
 
-const char* Engine::localFilePath;
+API vector<Entity*> Engine::entities;
+API vector<Entity*> Engine::needsStarting;
+API vector<MeshLoaded*> Engine::loadedMeshes;
 
-Engine::Engine(const char * localFilePath, Window* window, size_t initialEntities) : window(window)
+API const char* Engine::localFilePath;
+API GLuint Engine::vertexBuffer;
+API GLuint Engine::indexBuffer;
+API GLuint Engine::generalVAO;
+API Camera* Engine::mainCamera;
+
+
+int Engine::Init(const char * localFilePath, size_t initialEntities)
 {
 	entities.resize(initialEntities);
-	this->localFilePath = localFilePath;
-}
+	Engine::localFilePath = localFilePath;
 
-Engine::~Engine()
-{
-
-	
-}
-
-int Engine::Init()
-{
-	
 
 #pragma region OpenGlSetup
 	glGenBuffers(1, &vertexBuffer);
@@ -69,7 +69,16 @@ int Engine::Init()
 	squareMesh.uvs[2] = vec2(1, 1);
 	squareMesh.uvs[3] = vec2(1, 0);
 
-	squareMeshLoaded = LoadMesh(squareMesh);
+	MeshLoaded::squareMeshLoaded = LoadMesh(squareMesh);
+
+	return 0;
+}
+
+int Engine::Start()
+{
+	for (size_t i = 0; i < entities.size(); i++)
+		entities[i]->Start();
+	needsStarting.clear();
 
 	return 0;
 }
@@ -79,7 +88,7 @@ int Engine::Init()
 int Engine::Render()
 {
 	for (size_t i = 0; i < needsStarting.size(); i++)
-		entities[i]->Start();
+		needsStarting[i]->Start();
 	needsStarting.clear();
 
 	for (size_t i = 0; i < entities.size(); i++)
@@ -91,15 +100,37 @@ int Engine::Render()
 	return 0;
 }
 
+void Engine::Destroy()
+{
+	delete Engine::localFilePath;
+	for (size_t i = 0; i < entities.size(); i++)
+		delete entities[i];
+	entities.clear();
+	delete MeshLoaded::squareMeshLoaded ;
+}
+
 Entity * Engine::AddEntity(vec3 position, vec3 rotation, vec3 scale)
 {
-	Entity* entity = new Entity(this);
+	Entity* entity = new Entity();
 	entity->transform->SetPosition(position);
 	entity->transform->SetRotation(rotation);
 	entity->transform->SetScale(scale);
 	entities.push_back(entity);
 	needsStarting.push_back(entity);
 	return entity;
+}
+
+void Engine::DestroyEntity(Entity * entity)
+{
+	for (size_t i = 0; i < entities.size(); i++)
+	{
+		if (entities[i] == entity) {
+			delete entities[i];
+			entities[i] = entities[entities.size() - 1];
+			entities.pop_back();
+			return;
+		}
+	}
 }
 
 

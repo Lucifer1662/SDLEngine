@@ -2,32 +2,22 @@
 #include <SDL2\SDL_image.h>
 #include <SDL2\SDL_ttf.h>
 
-Window::Window(const char* localFilePath) 
-{
-	
-	string temp = localFilePath;
-	temp.resize(temp.find_last_of('\\') + 1);
-	temp.append("assets\\");
-	const char* t = new char[temp.size()+1];
-	memcpy((void*)t, temp.c_str(), temp.size()+1);
-	
-	engine = new Engine(t,this, 0);
-}
+API GLfloat Window::aspectRatio;
+API int Window::width;
+API int Window::height;
+API Event<void, int, int> Window::windowChangedSize;
+API Input Window::input;
+API SDL_Window* Window::window;
 
+int Window::Init(const char * windowName, const char* localFilePath, int x, int y, int width, int height, Uint32 flags)
+{	
 
-Window::~Window()
-{
-
-}
-
-int Window::Init(const char * windowName, const char* filePath, int x, int y, int width, int height, Uint32 flags)
-{
 	SDL_SetMainReady();
 	SDL_Init(SDL_INIT_VIDEO);
 	TTF_Init();
 	window = SDL_CreateWindow("Fighting Game", x, y, width, height, SDL_WINDOW_OPENGL);
-	this->width = width;
-	this->height = height;
+	Window::width = width;
+	Window::height = height;
 	aspectRatio = (float)width / (float)height;
 	SDL_SetWindowResizable(window, SDL_TRUE);
 	
@@ -55,16 +45,22 @@ int Window::Init(const char * windowName, const char* filePath, int x, int y, in
 	glewExperimental = GL_TRUE;
 	glewInit();
 	
-	engine->Init();
+	string temp = localFilePath;
+	temp.resize(temp.find_last_of('\\') + 1);
+	temp.append("assets\\");
+	const char* t = new char[temp.size() + 1];
+	memcpy((void*)t, temp.c_str(), temp.size() + 1);
+	Engine::Init(t);
 	return 0;
 }
 
 int Window::StartRendering(){	
 	SDL_Event windowEvent;
 	glClearColor(0.5, 0.0, 1.0, 1.0);
-
+	Engine::Start();
 	while (1) {
 		SDL_PollEvent(&windowEvent);
+		
 
 		switch (windowEvent.window.event)
 		{
@@ -79,8 +75,9 @@ int Window::StartRendering(){
 			
 		}
 
+		
 		glClear(GL_COLOR_BUFFER_BIT);
-		engine->Render();
+		Engine::Render();
 		SDL_GL_SwapWindow(window);
 		
 	}

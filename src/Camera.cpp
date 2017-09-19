@@ -11,9 +11,9 @@ using glm::vec4;
 void Camera::Refresh()
 {
 	if(isOrtho)
-		transformatiomMatrix = glm::ortho(-size, size, size / entity->engine->window->aspectRatio, -size / entity->engine->window->aspectRatio, -near, -far);
+		transformatiomMatrix = glm::ortho(-size, size, size / Window::aspectRatio, -size / Window::aspectRatio, -near, -far);
 	else
-		transformatiomMatrix = glm::perspective(glm::degrees(size), entity->engine->window->aspectRatio, -near, -far);
+		transformatiomMatrix = glm::perspective(glm::degrees(size), Window::aspectRatio, -near, -far);
 }
 
 void Camera::SetCameraToOrthographic(GLfloat size, GLfloat near, GLfloat far)
@@ -22,7 +22,7 @@ void Camera::SetCameraToOrthographic(GLfloat size, GLfloat near, GLfloat far)
 	this->near = near;
 	this->far = far;
 	isOrtho = true;
-	transformatiomMatrix = glm::ortho(-size, size, size / entity->engine->window->aspectRatio, -size / entity->engine->window->aspectRatio, -near, -far);
+	transformatiomMatrix = glm::ortho(-size, size, size / Window::aspectRatio, -size / Window::aspectRatio, -near, -far);
 }
 
 void Camera::SetCameraToPerspective(GLfloat angle, GLfloat near, GLfloat far)
@@ -31,13 +31,13 @@ void Camera::SetCameraToPerspective(GLfloat angle, GLfloat near, GLfloat far)
 	this->near = near;
 	this->far = far;
 	isOrtho = false;
-	transformatiomMatrix = glm::perspective(glm::degrees(angle), entity->engine->window->aspectRatio, -near, -far);
+	transformatiomMatrix = glm::perspective(glm::degrees(angle), Window::aspectRatio, -near, -far);
 	
 }
 
 void Camera::SetAsMainCamera()
 {
-	entity->engine->mainCamera = this;
+	Engine::mainCamera = this;
 }
 
 
@@ -52,7 +52,7 @@ void Camera::Update() {
 
 void Camera::Start()
 {
-	entity->engine->window->windowChangedSize.Add(this,windowChangedCameraRenderer);
+	Window::windowChangedSize.Add(this,windowChangedCameraRenderer);
 }
 
 void windowChangedCameraRenderer(void* obj, int w, int h) {
