@@ -6,7 +6,7 @@
 #include "Transform.h"
 #include "API.h"
 #include "MeshLoaded.h"
-
+#include "EngineTime.h"
 using std::make_shared;
 
 API vector<Entity*> Engine::entities;
@@ -62,6 +62,7 @@ int Engine::Start()
 
 int Engine::Render()
 {
+	Time::Time();
 	for (size_t i = 0; i < needsStarting.size(); i++)
 		needsStarting[i]->Start();
 	needsStarting.clear();

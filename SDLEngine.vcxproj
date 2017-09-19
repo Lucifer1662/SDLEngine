@@ -32,6 +32,7 @@
     <ClInclude Include="src\Mesh.h" />
     <ClInclude Include="src\MeshLoaded.h" />
     <ClInclude Include="src\Texture2D.h" />
+    <ClInclude Include="src\EngineTime.h" />
     <ClInclude Include="src\_MeshLoaded.h" />
     <ClInclude Include="src\Panel.h" />
     <ClInclude Include="src\Program.h" />
@@ -56,6 +57,7 @@
     <ClCompile Include="src\IO.cpp" />
     <ClCompile Include="src\MeshLoaded.cpp" />
     <ClCompile Include="src\Texture2D.cpp" />
+    <ClCompile Include="src\Time.cpp" />
     <ClCompile Include="src\_MeshLoaded.cpp" />
     <ClCompile Include="src\Panel.cpp" />
     <ClCompile Include="src\Program.cpp" />

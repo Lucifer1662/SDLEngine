@@ -28,6 +28,7 @@
     <ClInclude Include="src\_Texture2D.h" />
     <ClInclude Include="src\Texture2D.h" />
     <ClInclude Include="src\_MeshLoaded.h" />
+    <ClInclude Include="src\EngineTime.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Engine.cpp" />
@@ -49,5 +50,6 @@
     <ClCompile Include="src\_Texture2D.cpp" />
     <ClCompile Include="src\Texture2D.cpp" />
     <ClCompile Include="src\_MeshLoaded.cpp" />
+    <ClCompile Include="src\Time.cpp" />
   </ItemGroup>
 </Project>

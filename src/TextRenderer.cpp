@@ -2,6 +2,7 @@
 #include "Mesh.h"
 #include "Window.h"
 #include "Engine.h"
+#include "EngineTime.h"
 using glm::vec3;
 using glm::vec4;
 
@@ -30,10 +31,10 @@ void TextRenderer::Start() {
 	hasStarted = true;
 }
 
-int p = 0;
+
 void TextRenderer::Render() {
-	p++;
-	SetText(std::to_string(p));
+
+	SetText(std::to_string(1/Time::deltaTime));
 	//the renderer creates an array of points with the Font characters
 	//it handles the positions
 	//the glsl program can handle creating the planes
