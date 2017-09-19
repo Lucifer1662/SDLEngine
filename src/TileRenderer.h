@@ -7,7 +7,7 @@
 class API TileRenderer : public Component {
 	static SpriteRendererProgram* program;
 	Texture2D texture;
-	MeshLoaded* loadedMesh;
+	MeshLoaded loadedMesh;
 public: 
 	void Start();
 	void Render();

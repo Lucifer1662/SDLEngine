@@ -18,6 +18,7 @@ public:
 	static SDL_Window* window;
 	static int Init(const char* windowName, const char* filePath, int x, int y, int width, int height, Uint32 flags = 0);
 	static int StartRendering();
+	static void Destroy();
 
 
 };

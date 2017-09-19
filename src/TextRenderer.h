@@ -12,7 +12,7 @@ class API TextRenderer : public Component {
 	GLuint vbo;
 	GLuint ibo;
 	Mesh* CreateMeshDataForRender();
-	MeshLoaded* textMesh;
+	MeshLoaded textMesh;
 	friend void windowChangedTextRenderer(void* obj, int w, int h);	
 	void RefreshText();
 	bool hasStarted = false;

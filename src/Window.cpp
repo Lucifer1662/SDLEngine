@@ -79,7 +79,13 @@ int Window::StartRendering(){
 		glClear(GL_COLOR_BUFFER_BIT);
 		Engine::Render();
 		SDL_GL_SwapWindow(window);
-		
 	}
+	
 	return 0;
+}
+
+void Window::Destroy()
+{
+	Engine::Destroy();
+	SDL_DestroyWindow(window);
 }

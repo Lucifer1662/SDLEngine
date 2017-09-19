@@ -3,7 +3,7 @@
 #include "Split.h"
 #include "stdlib.h"
 #include "Window.h"
-#include "Texture2D.h"
+
 
 Font::Font()
 {
@@ -18,7 +18,7 @@ void Font::LoadFont(const char* fontName) {
 	string imageDestination = "Fonts/";
 	imageDestination.append(fontName);
 	imageDestination.append(".png");
-	texture = _Texture2D::Create((char *)imageDestination.c_str());
+	Texture2D::Create(imageDestination, texture);
 
 	string resourcePath = "Fonts/";
 	resourcePath.append(fontName);
@@ -81,5 +81,4 @@ size_t Font::GetSize()
 
 Font::~Font()
 {
-	_Texture2D::Delete(texture);
 }

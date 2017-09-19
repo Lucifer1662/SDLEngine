@@ -23,15 +23,17 @@ void TextRenderer::Start() {
 	//glGenBuffers(1, &ibo);
 	Mesh *mesh = CreateMeshDataForRender();
 	if(isStatic)
-		textMesh = Engine::LoadMesh(*mesh);
+		MeshLoaded::LoadMeshShared(*mesh, textMesh);
 	else
-		textMesh = Engine::LoadDynamicMesh(*mesh);
+		MeshLoaded::LoadMesh(*mesh, textMesh);
 	delete mesh;
 	hasStarted = true;
 }
 
-
+int p = 0;
 void TextRenderer::Render() {
+	p++;
+	SetText(std::to_string(p));
 	//the renderer creates an array of points with the Font characters
 	//it handles the positions
 	//the glsl program can handle creating the planes
@@ -40,7 +42,7 @@ void TextRenderer::Render() {
 	program->SetTransform(entity->transform);
 	font->texture->Bind(0);
 	//need to make this on its own vbo and ibo
-	Engine::RenderLoadedMesh(*textMesh);
+	Engine::RenderLoadedMesh(textMesh);
 }
 
 
@@ -139,6 +141,7 @@ Mesh* TextRenderer::CreateMeshDataForRender() {
 	
 
 	Mesh *mesh = new Mesh();
+	mesh->name = "Text";
 
 	
 	mesh->vertices = vector<vec3>(text.size() * 4);
@@ -217,7 +220,7 @@ void TextRenderer::RefreshText() {
 	if (!hasStarted)
 		return;
 	Mesh* mesh = CreateMeshDataForRender();
-	Engine::ChangeDynamicMesh(*mesh, textMesh);
+	textMesh.ChangeLoadedMesh(*mesh);
 	delete mesh;	
 }
 

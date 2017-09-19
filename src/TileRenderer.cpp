@@ -12,7 +12,7 @@ void TileRenderer::Render(){
 	program->PreRenderSetup();
 	program->SetTransform(entity->transform);
 	texture->Bind(0);
-	Engine::RenderLoadedMesh(*loadedMesh);
+	Engine::RenderLoadedMesh(loadedMesh);
 	//entity->engine->squareMeshLoaded->indexOffset = 6;
 	//entity->engine->RenderLoadedMesh(*entity->engine->squareMeshLoaded);
 }
@@ -24,6 +24,7 @@ void TileRenderer::Init(size_t width, size_t height, GLfloat delta, size_t * til
 
 	this->texture = texture;
 	Mesh mesh;
+	mesh.name = "Tile";
 	mesh.vertices = vector<vec3>(width*height * 4);
 	mesh.indices = vector<size_t>(width*height * 6);
 	mesh.uvs = vector<vec2>(width*height * 4);
@@ -60,7 +61,7 @@ void TileRenderer::Init(size_t width, size_t height, GLfloat delta, size_t * til
 	}
 	
 
-	loadedMesh = Engine::LoadMesh(mesh);
+	 MeshLoaded::LoadMesh(mesh, loadedMesh);
 
 
 
@@ -68,6 +69,5 @@ void TileRenderer::Init(size_t width, size_t height, GLfloat delta, size_t * til
 
 TileRenderer::~TileRenderer()
 {
-	_Texture2D::Delete(texture);
-	delete loadedMesh;
+	
 }

@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <glm\glm.hpp>
+#include <GL\glew.h>
 using std::string;
 
 using glm::vec2;
