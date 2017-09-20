@@ -41,7 +41,6 @@ GLuint SpriteRendererProgram::CreateProgram() {
 
 void SpriteRendererProgram::PreRenderSetup() {
 	Use(); 
-	//glUniformMatrix4fv(viewMatrixLocation, 1, GL_FALSE, &(Engine::mainCamera->getViewMatrix()[0][0])); //update
 }
 
 void SpriteRendererProgram::SetTransform(Transform* transform) {

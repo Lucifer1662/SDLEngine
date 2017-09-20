@@ -1,7 +1,7 @@
 #pragma once
-#ifndef API
 
+#ifndef IMPORT
 #define API __declspec(dllexport)
-
-#endif // !API
-
+#else
+#define API __declspec(dllimport)
+#endif // !IMPORT

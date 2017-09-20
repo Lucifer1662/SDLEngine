@@ -13,7 +13,6 @@ void TextRenderer::Start() {
 
 	isStatic = false;
 	program = Program::GetProgram<SpriteRendererProgram>();
-	size = 100;
 
 
 	//i should do static string
@@ -34,7 +33,7 @@ void TextRenderer::Start() {
 
 void TextRenderer::Render() {
 
-	SetText(std::to_string(1/Time::deltaTime));
+	
 	//the renderer creates an array of points with the Font characters
 	//it handles the positions
 	//the glsl program can handle creating the planes
@@ -139,7 +138,8 @@ Mesh* TextRenderer::CreateMeshDataForRender() {
 	float line = 0;
 	int texsizex = font->texture->width;
 	int texsizey = font->texture->height;
-	
+	float w = texsizex * size / font->GetSize();
+	float h = texsizey * size / font->GetSize();;
 
 	Mesh *mesh = new Mesh();
 	mesh->name = "Text";
@@ -148,6 +148,10 @@ Mesh* TextRenderer::CreateMeshDataForRender() {
 	mesh->vertices = vector<vec3>(text.size() * 4);
 	mesh->indices = vector<size_t>(text.size() * 6);
 	mesh->uvs = vector<vec2>(text.size() * 4);
+
+	vec2 mid;
+	vec2 adjSize;
+
 	//Create Verts
 	size_t i = 0, l = 0, u = 0;
 	for (int j = 0; j < text.size(); j++)
@@ -163,12 +167,9 @@ Mesh* TextRenderer::CreateMeshDataForRender() {
 		if (text[j] != ' ') {		
 		// + (float)fontCharacter.xoffset
 			cursor +=(float)fontCharacter.xoffset;
-			vec3 mid = vec3((cursor/texsizex ),
-							((float)fontCharacter.yoffset - (float)line)/texsizey,
-				entity->transform->position.z);
-
-			vec2 uvadjSize = vec2((float)fontCharacter.width / texsizex, (float)fontCharacter.height / texsizey);
-			vec2 gUv = vec2((float)fontCharacter.x / texsizex, (float)fontCharacter.y / texsizey);
+			
+			adjSize = vec2((float)fontCharacter.width / texsizex, -(float)fontCharacter.height / texsizey);
+			mid = vec2((float)fontCharacter.x / texsizex, (float)fontCharacter.y / texsizey);
 
 			mesh->indices[l++] = i;
 			mesh->indices[l++] = i + 1;
@@ -178,16 +179,20 @@ Mesh* TextRenderer::CreateMeshDataForRender() {
 			mesh->indices[l++] = i + 2;
 			mesh->indices[l++] = i + 3;
 
-			mesh->uvs[u++] = vec2(gUv.x, gUv.y);
-			mesh->uvs[u++] = vec2(gUv.x, gUv.y + uvadjSize.y);
-			mesh->uvs[u++] = vec2(gUv.x + uvadjSize.x, gUv.y + uvadjSize.y);
-			mesh->uvs[u++] = vec2(gUv.x + uvadjSize.x, gUv.y);
+			mesh->uvs[u++] = vec2(mid.x, mid.y);
+			mesh->uvs[u++] = vec2(mid.x, mid.y + adjSize.y);
+			mesh->uvs[u++] = vec2(mid.x + adjSize.x, mid.y + adjSize.y);
+			mesh->uvs[u++] = vec2(mid.x + adjSize.x, mid.y);
+
+			mid = vec2((cursor / w),
+				(-(float)fontCharacter.yoffset - (float)line) / h);
+			adjSize = vec2((float)fontCharacter.width / w, -(float)fontCharacter.height / h);
 
 
 			mesh->vertices[i++] = vec3(mid.x, mid.y, 0);
-			mesh->vertices[i++] = vec3(mid.x, mid.y + uvadjSize.y, 0);
-			mesh->vertices[i++] = vec3(mid.x + uvadjSize.x, mid.y + uvadjSize.y, 0);
-			mesh->vertices[i++] = vec3(mid.x + uvadjSize.x, mid.y, 0);
+			mesh->vertices[i++] = vec3(mid.x, mid.y + adjSize.y, 0);
+			mesh->vertices[i++] = vec3(mid.x + adjSize.x, mid.y + adjSize.y, 0);
+			mesh->vertices[i++] = vec3(mid.x + adjSize.x, mid.y, 0);
 
 
 			

@@ -37,6 +37,19 @@ public:
 		RecalulateOverallTransform();
 	}
 
+	void AddPosition(vec3 position) {
+		SetPosition(this->position + position);
+	}
+
+	void AddRotation(vec3 rotation) {
+		SetRotation(this->rotation + rotation);
+	}
+
+	void AddScale(vec3 scale) {
+		SetScale(this->scale + scale);
+	}
+
+
 
 	
 };

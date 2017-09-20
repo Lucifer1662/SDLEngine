@@ -5,21 +5,16 @@
 #include "Engine.h"
 #include "Event.h"
 #include "Input.h"
-static class API Window
+namespace Window
 {
-	
-	
-public:
-	static GLfloat aspectRatio;
-	static int width;
-	static int height;
-	static Event<void, int, int> windowChangedSize;
-	static Input input;
-	static SDL_Window* window;
-	static int Init(const char* windowName, const char* filePath, int x, int y, int width, int height, Uint32 flags = 0);
-	static int StartRendering();
-	static void Destroy();
-
-
+	API extern GLfloat aspectRatio;
+	API extern int width;
+	API extern int height;
+	API extern Event<void, int, int> windowChangedSize;
+	API extern Input input;
+	API extern SDL_Window* window;
+	API extern int Init(const char* windowName, const char* filePath, int x, int y, int width, int height, Uint32 flags = 0);
+	API extern int StartRendering();
+	API extern void Destroy();
 };
 

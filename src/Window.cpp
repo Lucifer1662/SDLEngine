@@ -1,6 +1,8 @@
 #include "Window.h"
 #include <SDL2\SDL_image.h>
 #include <SDL2\SDL_ttf.h>
+#include <string>
+using std::string;
 
 API GLfloat Window::aspectRatio;
 API int Window::width;

@@ -10,10 +10,5 @@ _MeshLoaded::~_MeshLoaded()
 
 void _MeshLoaded::RemoveFromGPU()
 {
-	std::cout << name << std::endl;
-	for (size_t i = 0; i < buffers.size(); i++)
-	{
-		std::cout << buffers[i] << std::endl;
-	}
 	glDeleteBuffers(buffers.size(), &buffers[0]);
 }

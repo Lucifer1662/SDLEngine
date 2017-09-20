@@ -7,45 +7,24 @@
 #include "API.h"
 #include "MeshLoaded.h"
 #include "EngineTime.h"
+#include "MeshLoaded.h"
 using std::make_shared;
 
-API vector<Entity*> Engine::entities;
-API vector<Entity*> Engine::needsStarting;
+vector<Entity*> Engine::entities;
+vector<Entity*> Engine::needsStarting;
 
 
-API const char* Engine::localFilePath;
-API Camera* Engine::mainCamera;
-
+const char* Engine::localFilePath;
+Camera* Engine::mainCamera;
+void(*Engine::LoadLevel)(size_t);
 
 
 int Engine::Init(const char * localFilePath, size_t initialEntities)
-{
-	
+{	
 	entities.resize(initialEntities);
 	Engine::localFilePath = localFilePath;
-
-/*
-#pragma region OpenGlSetup
-	glGenBuffers(1, &vertexBuffer);
-	glGenBuffers(1, &indexBuffer);
-#pragma endregion
-
-	glGenVertexArrays(1, &generalVAO);
-	glBindVertexArray(generalVAO);
-	glEnableVertexAttribArray(0);
-	glEnableVertexAttribArray(1);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
-	glVertexAttribPointer(0,3, GL_FLOAT, GL_FALSE, 20,0);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE,20, (void*)12);
-	*/
-
-
-
-	MeshLoaded::LoadDefaultMeshes();
-
-	
-
+	MeshLoaded::LoadDefaultMeshes();	
+	LoadLevel(0);
 	return 0;
 }
 
@@ -62,7 +41,7 @@ int Engine::Start()
 
 int Engine::Render()
 {
-	Time::Time();
+	EngineTime::Time();
 	for (size_t i = 0; i < needsStarting.size(); i++)
 		needsStarting[i]->Start();
 	needsStarting.clear();
@@ -112,24 +91,8 @@ void Engine::DestroyEntity(Entity * entity)
 
 void Engine::RenderLoadedMesh(MeshLoaded &meshLoaded)
 {
-	/*size_t i = 0;
-	for (i = 0; i < meshLoaded.atribCounts.size(); i++)
-		glEnableVertexAttribArray(meshLoaded.atribCounts[i].x);
-
-	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
-
-	for (i = 0; i < meshLoaded.atribCounts.size(); i++)
-		glVertexAttribPointer(meshLoaded.atribCounts[i].x, meshLoaded.atribCounts[i].y, GL_FLOAT, GL_FALSE,
-			meshLoaded.stride, (void*)(meshLoaded.atribCounts[i].z));
-*/
-	
 	glBindVertexArray(*meshLoaded->vao);
-
 	glDrawElements(GL_TRIANGLES, meshLoaded->indexCount, GL_UNSIGNED_INT, (void*)(meshLoaded->indexOffsetBytes));
-
-//	for (i = 0; i < meshLoaded.atribCounts.size(); i++)
-//		glDisableVertexAttribArray(meshLoaded.atribCounts[i].x);
 }
 
 

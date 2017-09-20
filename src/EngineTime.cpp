@@ -1,9 +1,10 @@
 #include "EngineTime.h"
 
-GLdouble Time::deltaTime;
-long Time::t1, Time::t2;
+GLdouble EngineTime::deltaTime;
+long EngineTime::t1;
+long EngineTime::t2;
 
-void Time::Time(){
+void EngineTime::Time(){
 	t1 = t2;
 	t2 = std::clock();
 	deltaTime = (t2 - t1) / double(CLOCKS_PER_SEC);

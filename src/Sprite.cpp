@@ -1,8 +1,8 @@
 #include "Sprite.h"
 #include "Engine.h"
 #include "Entity.h"
-#include "Input.h"
 #include "Window.h"
+#include "MeshLoaded.h"
 SpriteRendererProgram* Sprite::program;
 
 Sprite::Sprite()
@@ -27,6 +27,4 @@ void Sprite::Render()
 	program->SetTransform(entity->transform);
 	texture->Bind(0);
 	Engine::RenderLoadedMesh(MeshLoaded::squareMeshLoaded);
-	if (Input::KeyDown('a'))
-		entity->Destroy();
 }

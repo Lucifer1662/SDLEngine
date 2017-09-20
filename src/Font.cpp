@@ -49,7 +49,7 @@ void Font::LoadFont(const char* fontName) {
 		//"x=0"2
 		characters[id].x = atoi(&line[18]);
 		//"y=0"2
-		characters[id].y = atoi(&line[25]);
+		characters[id].y =  texture->height - atoi(&line[25]);
 		//"width=0"6
 		characters[id].width = atoi(&line[36]);
 		//"height=0"7

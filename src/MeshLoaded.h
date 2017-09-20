@@ -3,17 +3,23 @@
 #include <memory>
 #include "Mesh.h"
 #include "_MeshLoaded.h"
+#include "Engine.h"
 using std::shared_ptr;
-class Engine;
+
 
 class API MeshLoaded :	public shared_ptr<_MeshLoaded>{
 	bool isStatic = false;
-	friend class Engine;
 	static void LoadDefaultMeshes();
+	friend int Engine::Init(const char * localFilePath, size_t initialEntities);
+	friend void Engine::Destroy();
 	//this includes the default meshes as well
 	static void DeleteStaticMeshes();
 	static vector<MeshLoaded> loadedMeshes;
 public:
+	//friend int Engine::Init(const char * localFilePath, size_t initialEntities);
+	
+
+
 	MeshLoaded();
 	~MeshLoaded();
 

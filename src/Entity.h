@@ -6,19 +6,20 @@
 using std::vector;
 
 class Transform;
-class Engine;
 class API Entity
 {
-	friend class Engine;	
+	//friend class Engine;	
 	vector<Component*> components;
-	void Update();
-	void Render();
-	void Start();
+	
 	
 	vector<Entity*> children;
 	Entity* parent;
 
 public:
+	void Update();
+	void Render();
+	void Start();
+
 	Entity();
 	Entity(size_t numOfComponents);
 	~Entity();
@@ -30,6 +31,14 @@ public:
 		((Component*)t)->entity = this;
 		components.push_back((Component*)t);
 		return t;
+	}
+	template<typename T>
+	T* GetComponent() {
+		for (size_t i = 0; i < components.size(); i++)
+		{
+			if (dynamic_cast<T*>(components[i]))
+				return dynamic_cast<T*>(components[i]);
+		}
 	}
 
 	Entity* AddChild(Entity* child);
